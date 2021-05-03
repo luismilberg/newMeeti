@@ -9,6 +9,7 @@ module.exports = function () {
     router.get('/', homeController.home);
 
     router.get('/crear-cuenta', usuariosController.fromCrearCuenta);
+    router.post('/crear-cuenta', usuariosController.crearNuevaCuenta);
 
     return router;
 
