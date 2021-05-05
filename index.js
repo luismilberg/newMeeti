@@ -3,6 +3,9 @@ const router = require('./routes');
 const path = require('path');
 const expressLayouts = require('express-ejs-layouts');
 const bodyParser = require('body-parser');
+const session = require('express-session');
+const flash = require('connect-flash');
+const cookieParser = require('cookie-parser');
 
 // Habilitar las variables de entorno
 require('dotenv').config({path: 'variables.env'});
@@ -32,9 +35,24 @@ app.set('views', path.join(__dirname, './views'));
 // Archivos estáticos
 app.use(express.static('public'));
 
+// Cookie Parser
+app.use(cookieParser());
+
+// Sesiones 
+app.use(session({
+    secret: process.env.SECRETO,
+    key: process.env.KEY,
+    resave: false,
+    saveUninitialized: false
+}));
+
+// Flash messages
+app.use(flash());
+
 
 // Middleware propio
 app.use((req, res, next) => {
+    res.locals.mensajes = req.flash();
     const fecha = new Date();
     res.locals.year = fecha.getFullYear();
 
