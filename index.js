@@ -6,6 +6,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
+const passport = require('./config/passport');
 
 // Habilitar las variables de entorno
 require('dotenv').config({path: 'variables.env'});
@@ -26,6 +27,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : true}));
 
+
 // Template engine
 app.use(expressLayouts);
 app.set('view engine', 'ejs');
@@ -45,6 +47,10 @@ app.use(session({
     resave: false,
     saveUninitialized: false
 }));
+
+// Inicializar passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Flash messages
 app.use(flash());
