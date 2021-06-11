@@ -8,6 +8,7 @@ const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const passport = require('./config/passport');
 
+
 // Habilitar las variables de entorno
 require('dotenv').config({path: 'variables.env'});
 
@@ -18,10 +19,13 @@ const db = require('./config/db');
 
 // Requerir los modelos
 require('./models/Usuarios');
+require('./models/Categorias');
+require('./models/Grupos');
 
 
 // Aplicación principal
 const app = express();
+
 
 // Configuración del body parser
 app.use(bodyParser.json());
