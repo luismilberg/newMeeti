@@ -627,3 +627,7 @@ aside .ubicacion {
 aside img {
     display: block;
 }
+#mapa {
+    height: 60vh;
+    width: 100vw;
+}
