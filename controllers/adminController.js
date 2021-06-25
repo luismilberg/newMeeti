@@ -1,9 +1,22 @@
- const Grupos = require('../models/Grupos')
+ const Grupos = require('../models/Grupos');
+ const Meeti = require('../models/Meeti');
+ const moment = require('moment');
 
 exports.panelAdministracion = async (req, res) => {
-    const grupos = await Grupos.findAll({whre: {usuarioId : req.user.id}});
+
+    // Consultas
+    const consultas = [];
+    
+    consultas.push(Grupos.findAll({wehre: {usuarioId : req.user.id}}));
+    consultas.push(Meeti.findAll({where: {usuarioId : req.user.id}}));
+
+    const [grupos, meetis] = await Promise.all(consultas);
+
+
     res.render('administracion', {
         nombrePagina: 'Panel de administración',
-        grupos
+        grupos,
+        meetis,
+        moment
     });
 }

@@ -23,40 +23,65 @@ document.addEventListener('DOMContentLoaded', ()=> {
 function buscarDireccion(e){
     if(e.target.value.length > 5){
 
-        // Utilizar el provider
+        // Utilizar el provider y GeoCoder
+        
+        const geocodeService = L.esri.Geocoding.geocodeService();
         const provider = new OpenStreetMapProvider();
         provider.search({query: e.target.value}).then((resultado) => {
 
-            // Si existe un pin anterior limpiarlo
-            markers.clearLayers();
+            geocodeService.reverse().latlng(resultado[0].bounds[0], 15).run(function(error, result){
+                llenarImputs(result);
 
-            // Utilizar el provider y geocoder
-            const geocodeService = L.esri.Geocoding.geocodeService();
+                // Si existe un pin anterior limpiarlo
+                markers.clearLayers();
 
-            // Mostrar el mapa según la búsqueda
+                // Utilizar el provider y geocoder
 
-            map.setView((resultado[0].bounds[0]), 15);
+                // Mostrar el mapa según la búsqueda
 
-            // Agregar el pin en el mapa
+                map.setView((resultado[0].bounds[0]), 15);
 
-            marker = new L.marker(resultado[0].bounds[0], {
-                draggable: true,
-                autoPan: true
+                // Agregar el pin en el mapa
+
+                marker = new L.marker(resultado[0].bounds[0], {
+                    draggable: true,
+                    autoPan: true
+                })
+                .addTo(map)
+                .bindPopup(resultado[0].label)
+                .openPopup();
+
+                // Detectar movimiento del marker
+                marker.on('moveend', function(e){
+                    marker = e.target;
+                    const posicion = marker.getLatLng();
+                    map.panTo(new L.LatLng(posicion.lat, posicion.lng));
+                    // Reverse geocoding
+
+                    geocodeService.reverse().latlng(posicion, 15).run(function(error, result){
+                        
+                        // Asigna los valores al popup del marker
+                        marker.bindPopup(result.address.LongLabel).openPopup();
+                        llenarImputs(result);
+
+
+                    });
+                });
+
+                // Asignar al contenedor de markers
+                markers.addLayer(marker);
             })
-            .addTo(map)
-            .bindPopup(resultado[0].label)
-            .openPopup();
-
-            // Detectar movimiento del marker
-            marker.on('moveend', function(e){
-                marker = e.target;
-                const posicion = marker.getLatLng();
-                map.panTo(new L.LatLng(posicion.lat, posicion.lng));
-            });
-
-            // Asignar al contenedor de markers
-            markers.addLayer(marker);
 
         });
     }
+}
+
+
+function llenarImputs(resultado){
+    document.querySelector("#direccion").value = resultado.address.Address || '';
+    document.querySelector("#ciudad").value = resultado.address.City || '';
+    document.querySelector("#estado").value = resultado.address.Region || '';
+    document.querySelector("#pais").value = resultado.address.CountryCode || '';
+    document.querySelector("#lat").value = resultado.latlng.lat || '';
+    document.querySelector("#lng").value = resultado.latlng.lng || '';
 }

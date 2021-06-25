@@ -21,6 +21,7 @@ const db = require('./config/db');
 require('./models/Usuarios');
 require('./models/Categorias');
 require('./models/Grupos');
+require('./models/Meeti');
 
 
 // Aplicación principal
