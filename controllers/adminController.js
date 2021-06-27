@@ -16,14 +16,20 @@ exports.panelAdministracion = async (req, res) => {
             usuarioId : req.user.id,
             fecha: {[Op.gte] : moment(new Date()).format("YYYY-MM-DD")}
         }}));
+    consultas.push(Meeti.findAll({
+        where: {
+            usuarioId : req.user.id,
+            fecha: {[Op.lt] : moment(new Date()).format("YYYY-MM-DD")}
+        }}));
 
-    const [grupos, meetis] = await Promise.all(consultas);
+    const [grupos, meetis, anteriores] = await Promise.all(consultas);
 
 
     res.render('administracion', {
         nombrePagina: 'Panel de administración',
         grupos,
         meetis,
-        moment
+        moment,
+        anteriores
     });
 }
