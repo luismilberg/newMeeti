@@ -1,12 +1,50 @@
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
 
-const lat = -32.943044;
-const lng = -60.661592;
+
+// Obtener los valores de la base de datos
+const lat = document.querySelector('#lat').value || -32.943044;
+const lng = document.querySelector('#lng').value || -60.661592;
+const direccion = document.querySelector('#direccion').value || '';
+
+const geocodeService = L.esri.Geocoding.geocodeService();
 
 const map = L.map('mapa').setView([lat, lng], 15);
 
 let markers = new L.FeatureGroup().addTo(map);
 let marker;
+
+// Colocar el pin en Edición
+
+if(lat && lng){
+
+    marker = new L.marker([lat, lng], {
+        draggable: true,
+        autoPan: true
+    })
+    .addTo(map)
+    .bindPopup(direccion)
+    .openPopup();
+
+    // Detectar movimiento del marker
+    marker.on('moveend', function(e){
+        marker = e.target;
+        const posicion = marker.getLatLng();
+        map.panTo(new L.LatLng(posicion.lat, posicion.lng));
+        // Reverse geocoding
+
+        geocodeService.reverse().latlng(posicion, 15).run(function(error, result){
+            
+            // Asigna los valores al popup del marker
+            marker.bindPopup(result.address.LongLabel).openPopup();
+            llenarImputs(result);
+
+
+        });
+    });
+
+    // Asignar al contenedor de markers
+    markers.addLayer(marker);
+}
 
 document.addEventListener('DOMContentLoaded', ()=> {
    
@@ -25,7 +63,7 @@ function buscarDireccion(e){
 
         // Utilizar el provider y GeoCoder
         
-        const geocodeService = L.esri.Geocoding.geocodeService();
+        
         const provider = new OpenStreetMapProvider();
         provider.search({query: e.target.value}).then((resultado) => {
 

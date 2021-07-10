@@ -1,13 +1,11 @@
 const { body, validationResult } = require('express-validator');
-const shortid = require('shortid');
-const multer = require('multer');
 const path = require('path');
 const Categorias = require('../models/Categorias');
 const Grupos = require('../models/Grupos');
+
+const multer = require('multer');
+const shortid = require('shortid');
 const fs = require('fs');
-
-
-
 
 const configuracionMulter = {
     limits: {

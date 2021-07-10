@@ -25,6 +25,12 @@ module.exports = function () {
     // Autenticaciones de usuario
     router.post('/iniciar-sesion', authController.autenticarUsuario);
 
+    // Cerrar sesión
+    router.get('/cerrar-sesion',
+        authController.usuarioAutenticado,
+        authController.cerrarSesion
+    );
+
     // Rutas del panel de Administración
     router.get('/administracion', 
         authController.usuarioAutenticado,
@@ -91,6 +97,56 @@ module.exports = function () {
         meetiController.formEditarMeeti    
     );
 
+    router.post('/editar-meeti/:id',
+        authController.usuarioAutenticado,
+        meetiController.editarMeeti
+    );
+
+
+    // Eliminar meeti
+    router.get('/eliminar-meeti/:id',
+        authController.usuarioAutenticado,
+        meetiController.formEliminarMeeti
+    );
+
+    router.post('/eliminar-meeti/:id',
+        authController.usuarioAutenticado,
+        meetiController.eliminarMeeti
+    );
+
+    // Editar información de perfil
+    router.get('/editar-perfil',
+        authController.usuarioAutenticado,
+        usuariosController.formEditarPerfil
+    );
+
+    router.post('/editar-perfil', 
+        authController.usuarioAutenticado,
+        usuariosController.editarPerfil
+    );
+
+    // Modificar el password
+    router.get('/cambiar-password',
+        authController.usuarioAutenticado,
+        usuariosController.formCambiarPassword
+    );
+
+    router.post('/cambiar-password',
+        authController.usuarioAutenticado,
+        usuariosController.cambiarPassword
+    );
+
+    // Imagenes de perfil
+    router.get('/imagen-perfil',
+        authController.usuarioAutenticado,
+        usuariosController.formSubirImagenPerfil
+    );
+
+    router.post('/imagen-perfil',
+        authController.usuarioAutenticado,
+        usuariosController.subirImagen,
+        usuariosController.guardarImagenPerfil
+    );
 
     return router;
 

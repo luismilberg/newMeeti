@@ -20,9 +20,11 @@
     <header class="contenedor site-header">
         <a href="/"><img src="/img/logo.png" alt=""></a>
         <nav class="nav">
-            <a href="#">Crear Grupo</a>
-            <a href="/iniciar-sesion">Iniciar Sesión</a>
-            <a href="/crear-cuenta">Registrarse</a>
+            <% if(locals.usuario.id) { %>
+                <%- include ('partials/navAutenticado.ejs') %>
+              <% } else { %>
+                <%- include ('partials/navNoAutenticado.ejs') %>
+              <% } %>
         </nav>
     </header>
     
