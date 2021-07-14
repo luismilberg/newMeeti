@@ -81,7 +81,7 @@ exports.crearGrupo = async (req,res) => {
         res.redirect('/administracion');
     } catch (error) {
         const erroresSequelize = error.errors.map(err => err.message);
-        console.log(error);
+        console.log('ERROR: ',error);
         req.flash('error', erroresSequelize);
         res.redirect('/nuevo-grupo');
     }

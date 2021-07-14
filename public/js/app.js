@@ -1,4 +1,5 @@
 import { OpenStreetMapProvider } from 'leaflet-geosearch';
+import asistencia from './asistencia';
 
 
 // Obtener los valores de la base de datos

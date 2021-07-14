@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
+
+// Controladores Backend
 const homeController = require('../controllers/homeController');
 const usuariosController = require('../controllers/usuariosController');
 const authController = require('../controllers/authController');
@@ -8,10 +10,47 @@ const adminController = require('../controllers/adminController');
 const gruposController = require('../controllers/gruposController');
 const meetiController = require('../controllers/meetiController');
 
+// Controladores Frontend
+const meetiControllerFE = require('../controllers/frontend/meetiControllerFE');
+const usuariosControllerFE = require('../controllers/frontend/usuariosControllerFE');
+const gruposControllerFE = require('../controllers/frontend/gruposControllerFE');
+
 module.exports = function () {
+
+    // Área Pública
 
     // Home
     router.get('/', homeController.home);
+
+    // Muestra un meeti
+    router.get('/meeti/:slug',
+        meetiControllerFE.mostrarMeeti
+    );
+
+    // Confirma asistencia al Meeti
+    router.post('/confirmar-asistencia/:slug', 
+        meetiControllerFE.confirmarAsistencia
+    );
+
+    // Muestra asistentes al Meeti
+    router.get('/asistentes/:slug',
+        meetiControllerFE.mostrarAsistentes
+    );
+
+    // Muestra perfiles en el Frontend
+    router.get('/usuarios/:id',
+        usuariosControllerFE.mostrarUsuario
+    );
+
+    // Muestra los grupos en el frontend
+    router.get('/grupos/:id',
+        gruposControllerFE.mostrarGrupo
+    );
+
+    // Muestra Meeti's por categoria
+    router.get('/categoria/:categoria',
+        meetiControllerFE.mostrarCategoria
+    );
 
     // Crear y autenticar usuarios
     router.get('/crear-cuenta', usuariosController.fromCrearCuenta);
@@ -30,6 +69,11 @@ module.exports = function () {
         authController.usuarioAutenticado,
         authController.cerrarSesion
     );
+
+
+
+
+    // Área privada
 
     // Rutas del panel de Administración
     router.get('/administracion', 
