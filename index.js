@@ -14,14 +14,15 @@ require('dotenv').config({path: 'variables.env'});
 
 // Conexión a la db
 const db = require('./config/db');
+    // Requerir los modelos
+    require('./models/Usuarios');
+    require('./models/Categorias');
+    require('./models/Grupos');
+    require('./models/Meeti');
+    require('./models/Comentarios');
     db.sync().then(() => console.log('DB Conectada')).catch((err) => console.log(err));
 
 
-// Requerir los modelos
-require('./models/Usuarios');
-require('./models/Categorias');
-require('./models/Grupos');
-require('./models/Meeti');
 
 
 // Aplicación principal

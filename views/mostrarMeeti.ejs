@@ -65,27 +65,41 @@
             <div class="comentarios">
                 <h2>Comentarios:</h2>
 
-                <div class="comentario">
-                    <div class="imagen"></div>
-                    <div class="texto">
-                        <p>Hola</p>
-                        <p>Escrito por: <span>Luis Milberg</span></p>
-                        <input type="button" value="Eliminar" class="btn btn-azul">
-                    </div>
-                </div>
-
-                <div class="comentario">
-                    <div class="imagen"></div>
-                    <div class="texto">
-                        <p>Hola</p>
-                        <p>Escrito por: <span>Luis Milberg</span></p>
+                <% if(comentarios.length > 0){ %> 
+                    <% comentarios.forEach( comentario => { %> 
                         
-                    </div>
-                </div>
+                        <div class="comentario">
+                            <div class="imagen">
+                                <% if(comentario.usuario.imagen){ %>
+                                    <img src="/uploads/perfiles/<%= comentario.usuario.imagen %> ">
+                                <% } %> 
+                            </div>
+                            <div class="texto">
+                                <p><%= comentario.mensaje %> </p>
+                                <p>Escrito por: 
+                                    <a href="/usuarios/<%= comentario.usuario.id %> ">
+                                        <span><%= comentario.usuario.nombre %> </span>
+                                    </a>
+                                </p>
+                                <% if(comentario.usuario.id === usuario.id || meeti.usuarioId === usuario.id){ %> 
+                                    <form action="/eliminar-comentario" method="post" class="eliminar-comentario">
+                                        <input type="hidden" name="idComentario" value="<%= comentario.id %> ">
+                                        <input type="submit" value="Eliminar" class="btn btn-azul">
+                                    </form>
+                                <% } %> 
+                            </div>
+                        </div>
+
+                    <% }); %> 
+
+                <% } else { %>
+                    <p>No hay comentarios aún</p>
+                <% } %> 
 
                 <!-- formulario comentarios -->
+                <% if(usuario.id){ %> 
 
-                <form action="#" class="default-form comentarios">
+                <form action="/meeti/<%= meeti.id %> " method="post" class="default-form comentarios">
                     <legend>Agrega un comentario</legend>
                     <div class="campo">
                         <label>Comentario:</label>
@@ -96,6 +110,9 @@
                     </div>
                 </form>
 
+                <% } else { %> 
+                    <p>Inicia Sesión para agregar un comentario</p>
+                <% } %> 
                 <!-- formulario comentarios -->
             </div>
 
@@ -125,3 +142,13 @@
 
     </div>
 </main>
+<h2>Otros Meeti's Cercanos</h2>
+<div class="contenedor cercanos">
+    <% if(cercanos.length > 0){ %>
+        <% cercanos.forEach( meeti => { %>
+            <%- include ('partials/cardMeeti.ejs', { meeti }) %>
+        <% }); %> 
+    <% } else { %>
+        <p>No hay Meeti's Cercanos</p>
+    <% } %> 
+</div>
